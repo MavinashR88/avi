@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Avista · New proposal · scrape preview</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .surface {
+    flex: 1;
+    padding: var(--space-8) var(--space-6) var(--space-11);
+    max-width: 920px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .url-row {
+    display: flex;
+    gap: var(--space-3);
+    margin-bottom: var(--space-7);
+  }
+  .url-row .input { flex: 1; }
+  .preview {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .preview__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .preview__head h2 {
+    margin: 0;
+    font-size: var(--text-md);
+    color: var(--color-text-display);
+  }
+  .preview__head p {
+    margin: 0;
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+  }
+  .field-table { width: 100%; border-collapse: collapse; }
+  .field-table tr + tr td,
+  .field-table tr + tr th { border-top: 1px solid var(--color-border-subtle); }
+  .field-table th {
+    text-align: left;
+    width: 168px;
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-tertiary);
+    font-weight: var(--weight-semibold);
+    vertical-align: top;
+  }
+  .field-table td {
+    padding: var(--space-4) var(--space-5);
+    vertical-align: top;
+    font-size: var(--text-sm);
+  }
+  .field-table .value {
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-2);
+    line-height: var(--leading-snug);
+    font-size: var(--text-sm);
+  }
+  .field-table .value strong {
+    color: var(--color-text-display);
+    font-weight: var(--weight-semibold);
+  }
+  .field-table .actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-text-secondary);
+  }
+  .field-table .row-edit {
+    margin-left: auto;
+    padding-left: var(--space-4);
+    display: flex;
+    gap: var(--space-2);
+  }
+  .icon-btn {
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+  }
+  .icon-btn:hover { background: var(--color-ink-50); color: var(--color-text-primary); border-color: var(--color-border-subtle); }
+  .row-flex { display: flex; align-items: flex-start; gap: var(--space-3); flex-wrap: wrap; }
+  .preview__foot {
+    background: var(--color-bg-raised);
+    border-top: 1px solid var(--color-border-subtle);
+    padding: var(--space-4) var(--space-5);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--text-sm);
+  }
+  .targets {
+    display: flex;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+  }
+  .target {
+    flex: 1;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+  }
+  .target--active { border-color: var(--color-brand-700); background: var(--color-brand-50); }
+  .target__icon {
+    width: 36px; height: 36px;
+    border-radius: var(--radius-sm);
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--color-ink-50);
+    color: var(--color-text-primary);
+    font-weight: var(--weight-bold);
+  }
+  .target__title { font-weight: var(--weight-semibold); font-size: var(--text-sm); color: var(--color-text-display); }
+  .target__sub   { font-size: var(--text-xs); color: var(--color-text-secondary); }
+  .key-hint {
+    display:inline-flex; padding: 1px 6px; border-radius: var(--radius-xs);
+    background: var(--color-ink-50);
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="row">
+      <div class="topbar__brand"><span class="topbar__brand-mark">A</span> Avista</div>
+      <span class="t-tertiary">/</span>
+      <span class="t-body-sm t-strong">New proposal</span>
+    </div>
+    <div class="topbar__crumbs">
+      <span class="statusbar__dot" style="background: var(--color-success-500);"></span>
+      <span>Read · 1.8s</span>
+    </div>
+    <div class="topbar__user">
+      <span>12 / 30 this month</span>
+      <span class="avatar">AM</span>
+    </div>
+  </header>
+
+  <main class="surface">
+    <div class="stack stack-3" style="margin-bottom: var(--space-7);">
+      <h1 class="t-h1" style="margin:0;">Paste a job URL.</h1>
+      <p class="t-body t-muted" style="margin:0;">We'll read the listing and draft a proposal in your voice. One paste in, one draft out.</p>
+    </div>
+
+    <div class="url-row">
+      <input class="input input--lg" type="url" value="https://www.upwork.com/jobs/~01a92f7c4b9e23d8d2_Senior-React-Engineer-Acme-Health" />
+      <button class="btn btn--primary btn--lg">Draft proposal →</button>
+    </div>
+
+    <p class="t-caption" style="margin-bottom: var(--space-5);">
+      Or <a href="#">paste the job description as text</a> — useful when a listing is behind login.
+    </p>
+
+    <div class="targets">
+      <div class="target target--active">
+        <div class="target__icon">U</div>
+        <div>
+          <div class="target__title">Upwork</div>
+          <div class="target__sub">Assisted send via browser extension</div>
+        </div>
+      </div>
+      <div class="target">
+        <div class="target__icon">@</div>
+        <div>
+          <div class="target__title">Email</div>
+          <div class="target__sub">Direct to client</div>
+        </div>
+      </div>
+      <div class="target">
+        <div class="target__icon">⎘</div>
+        <div>
+          <div class="target__title">Copy to clipboard</div>
+          <div class="target__sub">Send wherever you want</div>
+        </div>
+      </div>
+    </div>
+
+    <section class="preview">
+      <div class="preview__head">
+        <div>
+          <h2>Here's what we read from the listing.</h2>
+          <p>Fix anything wrong before we draft — we'll use these to generate.</p>
+        </div>
+        <div class="row row-2">
+          <span class="chip chip--scraped"><span class="chip__dot"></span>scraped</span>
+          <span class="chip chip--inferred"><span class="chip__dot"></span>inferred from JD</span>
+          <span class="chip chip--missing">missing</span>
+        </div>
+      </div>
+
+      <table class="field-table">
+        <tr>
+          <th>Role</th>
+          <td>
+            <div class="row-flex">
+              <div class="value"><strong>Senior React Engineer</strong> — contract, 3 months, remote-friendly</div>
+              <div class="row-flex"><span class="chip chip--scraped">scraped</span></div>
+              <div class="row-edit"><button class="icon-btn" title="Edit">✎</button></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>Budget</th>
+          <td>
+            <div class="row-flex">
+              <div class="value"><strong>$60–$80/hr</strong> · weekly billing</div>
+              <div class="row-flex"><span class="chip chip--scraped">scraped</span></div>
+              <div class="row-edit"><button class="icon-btn" title="Edit">✎</button></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>Must-have skills</th>
+          <td>
+            <div class="row-flex" style="gap: var(--space-2);">
+              <span class="chip chip--scraped">React 18</span>
+              <span class="chip chip--scraped">TypeScript</span>
+              <span class="chip chip--scraped">Next.js 14</span>
+              <span class="chip chip--inferred">Stripe / payments</span>
+              <span class="chip chip--inferred">accessibility</span>
+              <span class="chip chip--neutral">+ add</span>
+            </div>
+            <p class="t-caption" style="margin-top: var(--space-2);">
+              Stripe was not in the must-have list — we inferred it from "billing portal v2" in the description.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <th>Client</th>
+          <td>
+            <div class="row-flex">
+              <div class="value">
+                <strong>Acme Health</strong> · NYC, 12 employees · 23 hires on Upwork, 4.9★ over 18 reviews
+              </div>
+              <div class="row-flex"><span class="chip chip--scraped">scraped</span></div>
+              <div class="row-edit"><button class="icon-btn" title="Edit">✎</button></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>Project context</th>
+          <td>
+            <div class="value">
+              Rebuilding patient-facing billing portal. Current stack on React 16 + Redux. Must be HIPAA-aware
+              (no PHI on the client). Looking to ship a beta in 8 weeks.
+            </div>
+            <span class="chip chip--scraped">scraped · 312 words</span>
+          </td>
+        </tr>
+        <tr>
+          <th>Timezone</th>
+          <td>
+            <div class="row-flex">
+              <div class="value t-muted">Not stated on the listing.</div>
+              <div class="row-flex"><span class="chip chip--missing">missing</span></div>
+              <div class="row-edit"><button class="icon-btn" title="Add">+ add</button></div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>Posted</th>
+          <td>
+            <div class="value">2 hours ago · 9 proposals so far</div>
+            <span class="chip chip--scraped">scraped</span>
+          </td>
+        </tr>
+      </table>
+
+      <div class="preview__foot">
+        <div class="t-caption">
+          We didn't open the client's company page. <a href="#">Read it too</a> to pull recent news (adds ~3s).
+        </div>
+        <div class="row">
+          <button class="btn btn--secondary">Cancel</button>
+          <button class="btn btn--primary">Draft proposal →</button>
+          <span class="key-hint">⌘ ↵</span>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<nav class="proto-nav" aria-label="prototype navigation">
+  <a href="index.html">Index</a>
+  <span class="proto-nav__sep">·</span>
+  <a href="01-onboarding-proposals.html">1</a>
+  <a href="02-trust-moment.html">2</a>
+  <a class="proto-nav__current" href="03-new-proposal.html">3</a>
+  <a href="04-chat-edit.html">4</a>
+  <a href="05-upwork-send.html">5</a>
+  <a href="06-email-sent.html">6</a>
+</nav>
+</body>
+</html>

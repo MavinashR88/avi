@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Avista · Chat-edit canvas</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .app { height: 100vh; overflow: hidden; }
+  .canvas {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    min-height: 0;
+  }
+  .pane {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .pane--chat {
+    background: var(--color-bg-raised);
+    border-right: 1px solid var(--color-border-subtle);
+  }
+  .pane--draft {
+    background: var(--color-bg-surface);
+  }
+  .pane__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-bg-surface);
+  }
+  .pane--chat .pane__head { background: var(--color-bg-raised); }
+  .pane__head h2 {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    font-weight: var(--weight-semibold);
+  }
+  .pane__body { flex: 1; overflow: auto; padding: var(--space-5); }
+
+  .chat-msg + .chat-msg { margin-top: var(--space-5); }
+  .chat-msg__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+  }
+  .chat-msg__author {
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-primary);
+    font-size: var(--text-sm);
+  }
+  .chat-msg__body {
+    font-size: var(--text-sm);
+    color: var(--color-text-primary);
+    line-height: var(--leading-relaxed);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+  }
+  .chat-msg--user .chat-msg__body {
+    background: var(--color-brand-50);
+    border-color: var(--color-brand-200);
+    color: var(--color-brand-900);
+  }
+  .chat-msg__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+  }
+
+  .chat-input-wrap {
+    border-top: 1px solid var(--color-border-subtle);
+    padding: var(--space-4) var(--space-5);
+    background: var(--color-bg-surface);
+  }
+  .chat-input {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-end;
+  }
+  .chat-input .input {
+    height: 42px;
+    border-radius: var(--radius-sm);
+  }
+  .chat-input__hint {
+    margin-top: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    justify-content: space-between;
+  }
+  .key-hint {
+    display:inline-flex; padding: 1px 6px; border-radius: var(--radius-xs);
+    background: var(--color-ink-50);
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .draft__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+  }
+  .draft-body {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: var(--space-7) 0;
+    font-size: var(--text-md);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-primary);
+  }
+  .draft-body p { margin: 0 0 var(--space-4); }
+  .draft-body ul { margin: 0 0 var(--space-4); padding-left: var(--space-5); }
+  .draft-body li { margin: var(--space-1) 0; }
+  .draft-body .pulse {
+    background: linear-gradient(90deg, transparent, rgba(15, 118, 110, 0.06), transparent);
+    border-left: 2px solid var(--color-brand-500);
+    padding-left: var(--space-3);
+    margin-left: calc(-1 * var(--space-3) - 2px);
+  }
+  .send-menu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="row">
+      <div class="topbar__brand"><span class="topbar__brand-mark">A</span> Avista</div>
+      <span class="t-tertiary">/</span>
+      <span class="t-body-sm t-strong">Acme Health — Senior React Engineer</span>
+      <span class="chip chip--neutral" style="margin-left:var(--space-2);">draft</span>
+    </div>
+    <div class="topbar__crumbs">
+      <span class="statusbar__dot"></span>
+      Saved 2s ago
+    </div>
+    <div class="row">
+      <button class="btn btn--secondary btn--sm">↶ Undo</button>
+      <div class="row row-2">
+        <button class="btn btn--secondary btn--sm">v3 ▾</button>
+      </div>
+      <a href="05-upwork-send.html" class="btn btn--primary btn--sm">Send via Upwork →</a>
+    </div>
+  </header>
+
+  <div class="canvas">
+    <section class="pane pane--chat" aria-label="Chat">
+      <div class="pane__head">
+        <h2>Chat</h2>
+        <span class="t-caption">Anthropic Sonnet · streaming</span>
+      </div>
+
+      <div class="pane__body" id="chat">
+
+        <div class="chat-msg">
+          <div class="chat-msg__head">
+            <span class="topbar__brand-mark" style="width:18px;height:18px;font-size:10px;">A</span>
+            <span class="chat-msg__author">Avista</span>
+            <span>· 2 min ago · v1</span>
+          </div>
+          <div class="chat-msg__body">
+            Here's a first draft. I led with your Stripe billing portal since the JD calls out
+            "billing portal v2" — that's the closest match in your portfolio. Kept it short
+            (167 words), opened with a hook, asked three scoping questions before pricing — matches
+            your three samples.
+          </div>
+          <div class="chat-msg__chips">
+            <button class="chip chip--interactive">Make it shorter</button>
+            <button class="chip chip--interactive">More confident</button>
+            <button class="chip chip--interactive">Drop the price line</button>
+            <button class="chip chip--interactive">Lead with another project</button>
+            <button class="chip chip--interactive">Mention timezone</button>
+          </div>
+        </div>
+
+        <div class="chat-msg chat-msg--user">
+          <div class="chat-msg__head">
+            <span class="avatar" style="width:18px;height:18px;font-size:10px;">AM</span>
+            <span class="chat-msg__author">You</span>
+            <span>· 1 min ago</span>
+          </div>
+          <div class="chat-msg__body">
+            Lead with the design-system project instead — the React 16 callout in the JD makes it
+            more relevant than payments. And drop the timezone line, it's already on my profile.
+          </div>
+        </div>
+
+        <div class="chat-msg">
+          <div class="chat-msg__head">
+            <span class="topbar__brand-mark" style="width:18px;height:18px;font-size:10px;">A</span>
+            <span class="chat-msg__author">Avista</span>
+            <span>· just now · v3</span>
+            <span class="chip chip--neutral" style="height:18px;font-size:11px;">streaming</span>
+          </div>
+          <div class="chat-msg__body">
+            Swapped. Lead is now the React 16 → 18 migration on shopify-helper.dev. Cut the timezone
+            line. Kept the three scoping questions and the same close. Anything else?
+          </div>
+          <div class="chat-msg__chips">
+            <button class="chip chip--interactive">Tighten the close</button>
+            <button class="chip chip--interactive">Add a question about HIPAA</button>
+            <button class="chip chip--interactive">Mirror the JD tone</button>
+            <button class="chip chip--interactive">Trim to under 150 words</button>
+            <button class="chip chip--interactive">Add bullets</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="chat-input-wrap">
+        <div class="chat-input">
+          <input class="input" placeholder="Type a revision — or pick a chip above." />
+          <button class="btn btn--primary">Send</button>
+        </div>
+        <div class="chat-input__hint">
+          <span>Free text or chips, both work. Each edit creates a new version.</span>
+          <span><span class="key-hint">↵</span> to send · <span class="key-hint">⌘Z</span> to undo</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="pane pane--draft" aria-label="Draft">
+      <div class="pane__head">
+        <h2>Draft · v3</h2>
+        <div class="draft__meta">
+          <span>167 words · ~1 min read</span>
+          <span>·</span>
+          <span class="statusbar"><span class="statusbar__dot"></span>Saved 2s ago</span>
+        </div>
+      </div>
+      <div class="pane__body">
+        <article class="draft-body">
+          <p class="pulse">Hey — saw the listing. The React 16 → 18 + Suspense migration is exactly what I was shipping last quarter on shopify-helper.dev — went off React 16 in three weeks with zero customer-facing downtime, and that codebase was a similar size to a patient-facing billing portal.</p>
+
+          <p>Most relevant work for this brief:</p>
+          <ul>
+            <li>React 16 → 18 migration on shopify-helper.dev — 4 engineers, 3 weeks, zero downtime</li>
+            <li>TypeScript design-system migration on a Series A marketplace (12K MAU)</li>
+            <li>Stripe billing portal rewrite at payments.acme.io — cut failed-payment churn 31%</li>
+          </ul>
+
+          <p>Three things I'd want to know before pricing:</p>
+          <ul>
+            <li>How much of the Redux state can come along, vs. rewritten in Zustand / Tanstack Query?</li>
+            <li>Where does PHI currently sit in the React tree, and how do you want it isolated?</li>
+            <li>Is the 8-week beta deadline hard, or aspirational?</li>
+          </ul>
+
+          <p>Rate $85/hr, weekly invoiced. Can do a 30-min kickoff this week to see if we're a fit.</p>
+
+          <p>— Alex</p>
+        </article>
+      </div>
+    </section>
+  </div>
+</div>
+
+<nav class="proto-nav" aria-label="prototype navigation">
+  <a href="index.html">Index</a>
+  <span class="proto-nav__sep">·</span>
+  <a href="01-onboarding-proposals.html">1</a>
+  <a href="02-trust-moment.html">2</a>
+  <a href="03-new-proposal.html">3</a>
+  <a class="proto-nav__current" href="04-chat-edit.html">4</a>
+  <a href="05-upwork-send.html">5</a>
+  <a href="06-email-sent.html">6</a>
+</nav>
+</body>
+</html>

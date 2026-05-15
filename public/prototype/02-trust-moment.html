@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Avista · Trust moment</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .trust {
+    flex: 1;
+    padding: var(--space-9) var(--space-6) var(--space-11);
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .trust__head { text-align: center; margin-bottom: var(--space-7); }
+  .trust__head h1 { margin: 0 0 var(--space-2); }
+  .trust__head p  { margin: 0; color: var(--color-text-secondary); font-size: var(--text-md); }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+  }
+  .draft {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-sm);
+  }
+  .draft--generic { background: var(--color-ink-50); border-color: var(--color-border-subtle); }
+  .draft__label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .draft__label h3 {
+    margin: 0;
+    font-size: var(--text-md);
+    color: var(--color-text-display);
+  }
+  .draft__body {
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-primary);
+    white-space: pre-line;
+  }
+  .observations {
+    margin: var(--space-7) auto 0;
+    max-width: 760px;
+    background: var(--color-brand-50);
+    border: 1px solid var(--color-brand-200);
+    border-radius: var(--radius-md);
+    padding: var(--space-6);
+  }
+  .observations h3 {
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-md);
+    color: var(--color-brand-900);
+    font-weight: var(--weight-semibold);
+  }
+  .observations ul {
+    margin: 0;
+    padding-left: var(--space-5);
+    color: var(--color-brand-900);
+    line-height: var(--leading-relaxed);
+    font-size: var(--text-sm);
+  }
+  .observations li { margin: var(--space-2) 0; }
+  .observations strong { color: var(--color-brand-900); }
+  .check-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    margin-top: var(--space-7);
+  }
+  .next {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-7);
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar__brand"><span class="topbar__brand-mark">A</span> Avista</div>
+    <div class="t-caption" style="display:flex;align-items:center;gap:var(--space-2);">
+      <span class="statusbar__dot" style="background: var(--color-success-500);"></span>
+      Voice learned in 12 seconds
+    </div>
+    <div class="topbar__user">
+      <span>Alex Mathieu</span>
+      <span class="avatar">AM</span>
+    </div>
+  </header>
+
+  <main class="trust">
+    <div class="trust__head">
+      <div class="t-caption" style="text-transform: uppercase; letter-spacing: var(--tracking-wide); margin-bottom: var(--space-2);">Step 3 done · 1 to go</div>
+      <h1 class="t-h1">Here's a generic AI proposal — and the same one in your voice.</h1>
+      <p>Same fake job: <em>Senior React Engineer at a fintech, 3-month contract</em>. Tell us which one sounds like you.</p>
+    </div>
+
+    <div class="compare">
+      <article class="draft draft--generic">
+        <div class="draft__label">
+          <h3>Generic GPT version</h3>
+          <span class="chip chip--missing">baseline</span>
+        </div>
+        <div class="draft__body">
+Dear Hiring Manager,
+
+I am writing to express my keen interest in the Senior React Engineer position posted for your fintech project. With extensive experience in modern frontend development and a proven track record of delivering scalable, high-quality applications, I am confident in my ability to contribute meaningfully to your team.
+
+Throughout my career, I have developed a strong foundation in React, TypeScript, and Next.js, complemented by a deep understanding of state management, performance optimization, and accessibility best practices. I have successfully led numerous projects from inception to deployment, collaborating effectively with cross-functional stakeholders to ensure alignment with business objectives.
+
+I am particularly drawn to your project because it aligns with my passion for building reliable, user-centric financial tools. I would welcome the opportunity to discuss how my skills and experience can support your team's success.
+
+Thank you for considering my application. I look forward to the possibility of contributing to your innovative work.
+
+Sincerely,
+Alex
+        </div>
+      </article>
+
+      <article class="draft">
+        <div class="draft__label">
+          <h3>In your voice</h3>
+          <span class="chip chip--scraped">
+            <span class="chip__dot"></span>
+            Alex
+          </span>
+        </div>
+        <div class="draft__body">
+Hey — saw the brief.
+
+This is the kind of thing I've been shipping for the last two years. Last one was a Stripe-backed billing portal at 12K MAU; the one before that was a TypeScript design-system migration on a Series A marketplace.
+
+Three things I'd want to know before pricing:
+- How much of the current React 16 codebase do you want left alone vs. modernized?
+- Are the payment paths already TypeScript or still JS?
+- What's the actual deadline — the 3-month contract, or the launch behind it?
+
+Rate $85/hr, weekly invoiced. Can do a 30-min call this week to figure out if we're a fit.
+
+— Alex
+        </div>
+      </article>
+    </div>
+
+    <div class="observations">
+      <h3>What we noticed in your three samples</h3>
+      <ul>
+        <li><strong>You open with a hook,</strong> not "Dear Hiring Manager" — three for three.</li>
+        <li><strong>You ask the client a question</strong> in the first half of every proposal.</li>
+        <li><strong>Sentences run short.</strong> Median 11 words. We matched that.</li>
+        <li><strong>You drop price near the close,</strong> never the open.</li>
+        <li><strong>Sign-off is "— Alex"</strong> with the em-dash, not "Best regards."</li>
+      </ul>
+    </div>
+
+    <div class="check-row">
+      <span class="t-body" style="color: var(--color-text-primary);">Sound right?</span>
+      <button class="btn btn--primary">Yes — this is me</button>
+      <button class="btn btn--secondary">Not quite — adjust</button>
+    </div>
+
+    <div class="next">
+      <a class="btn btn--lg btn--primary" href="03-new-proposal.html" style="padding: 0 var(--space-7);">
+        Write my first proposal →
+      </a>
+    </div>
+  </main>
+</div>
+
+<nav class="proto-nav" aria-label="prototype navigation">
+  <a href="index.html">Index</a>
+  <span class="proto-nav__sep">·</span>
+  <a href="01-onboarding-proposals.html">1</a>
+  <a class="proto-nav__current" href="02-trust-moment.html">2</a>
+  <a href="03-new-proposal.html">3</a>
+  <a href="04-chat-edit.html">4</a>
+  <a href="05-upwork-send.html">5</a>
+  <a href="06-email-sent.html">6</a>
+</nav>
+</body>
+</html>

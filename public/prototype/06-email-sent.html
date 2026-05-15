@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Avista · Email send + sent</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 1280px;
+    margin: var(--space-7) auto var(--space-11);
+    gap: var(--space-7);
+    padding: 0 var(--space-6);
+  }
+  .col h2 {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+    font-weight: var(--weight-semibold);
+  }
+  .email-card { padding: var(--space-6); }
+  .email-card .field { margin-bottom: var(--space-5); }
+  .email-card .field__label { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: var(--tracking-wide); color: var(--color-text-tertiary); }
+
+  .preview-box {
+    margin-top: var(--space-4);
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    padding: var(--space-5);
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text-primary);
+    white-space: pre-line;
+    max-height: 280px;
+    overflow: auto;
+  }
+  .pre-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+  }
+  .pre-label small { color: var(--color-text-tertiary); font-size: var(--text-xs); }
+
+  /* Sent state */
+  .sent {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--space-9) var(--space-7);
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .checkmark {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-5);
+    border-radius: var(--radius-full);
+    background: var(--color-success-50);
+    color: var(--color-success-700);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+  .sent h1 {
+    margin: 0 0 var(--space-2);
+    color: var(--color-text-display);
+  }
+  .sent .meta {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-7);
+    font-size: var(--text-sm);
+  }
+  .sent__metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: var(--color-bg-raised);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    margin: var(--space-5) 0 var(--space-7);
+    border: 1px solid var(--color-border-subtle);
+    text-align: left;
+  }
+  .sent__metrics .metric { padding: 0 var(--space-3); }
+  .sent__metrics .metric + .metric { border-left: 1px solid var(--color-border-subtle); }
+  .sent__metrics .metric small {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    margin-bottom: var(--space-1);
+  }
+  .sent__metrics .metric strong {
+    font-size: var(--text-md);
+    color: var(--color-text-display);
+    font-weight: var(--weight-semibold);
+  }
+  .sent__actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-3);
+  }
+  .toast-row {
+    position: fixed;
+    bottom: 96px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: var(--z-toast);
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar__brand"><span class="topbar__brand-mark">A</span> Avista</div>
+  <div class="t-caption">Step 6 of 6 · Email send</div>
+  <a class="btn btn--ghost btn--sm" href="04-chat-edit.html">← Back to draft</a>
+</header>
+
+<main>
+  <div class="columns">
+
+    <div class="col">
+      <h2>Compose</h2>
+      <div class="card email-card">
+        <div class="field">
+          <label class="field__label">To</label>
+          <input class="input" type="email" value="sara.kim@acme-health.com" />
+          <small class="field__hint">From the listing's "Hiring manager" section · <a href="#">change</a></small>
+        </div>
+
+        <div class="field">
+          <label class="field__label">Subject</label>
+          <input class="input" value="Senior React Engineer at Acme Health — proposal from Alex Mathieu" />
+          <small class="field__hint">Auto-suggested · ✎ edit</small>
+        </div>
+
+        <div class="field">
+          <label class="field__label">From</label>
+          <input class="input" value="Alex Mathieu &lt;alex@alexdesign.io&gt;" />
+          <small class="field__hint">Verified · <a href="#">change sender</a></small>
+        </div>
+
+        <div class="field">
+          <div class="pre-label">
+            <label class="field__label" style="margin-bottom:0;">Preview</label>
+            <small>v3 · 167 words · last edited 2 min ago</small>
+          </div>
+          <div class="preview-box">Hi Sara —
+
+Saw the listing. The React 16 → 18 + Suspense migration is exactly what I was shipping last quarter on shopify-helper.dev — went off React 16 in three weeks with zero customer-facing downtime, and that codebase was a similar size to a patient-facing billing portal.
+
+Most relevant work for this brief:
+- React 16 → 18 migration on shopify-helper.dev — 4 engineers, 3 weeks, zero downtime
+- TypeScript design-system migration on a Series A marketplace (12K MAU)
+- Stripe billing portal rewrite at payments.acme.io — cut failed-payment churn 31%
+
+Three things I'd want to know before pricing:
+- How much of the Redux state can come along, vs. rewritten in Zustand / Tanstack Query?
+- Where does PHI currently sit in the React tree, and how do you want it isolated?
+- Is the 8-week beta deadline hard, or aspirational?
+
+Rate $85/hr, weekly invoiced. Can do a 30-min kickoff this week to see if we're a fit.
+
+— Alex</div>
+        </div>
+
+        <div class="row row--between" style="margin-top: var(--space-6);">
+          <button class="btn btn--ghost">Save and close</button>
+          <div class="row">
+            <button class="btn btn--secondary">Back</button>
+            <button class="btn btn--primary">Send proposal →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col">
+      <h2>After send</h2>
+      <div class="sent">
+        <div class="checkmark">✓</div>
+        <h1 class="t-h1">Proposal sent</h1>
+        <div class="meta">to sara.kim@acme-health.com · 2:14 PM · delivery confirmed</div>
+
+        <div class="sent__metrics">
+          <div class="metric">
+            <small>Drafted in</small>
+            <strong>4 min 12 sec</strong>
+          </div>
+          <div class="metric">
+            <small>Edits</small>
+            <strong>2 turns · v3</strong>
+          </div>
+          <div class="metric">
+            <small>Month so far</small>
+            <strong>13 / 30 proposals</strong>
+          </div>
+        </div>
+
+        <div class="sent__actions">
+          <button class="btn btn--secondary">View in Sent</button>
+          <a href="03-new-proposal.html" class="btn btn--primary">Write another →</a>
+        </div>
+
+        <hr class="divider" style="margin: var(--space-7) 0 var(--space-5);">
+
+        <div class="t-caption" style="text-align: left; color: var(--color-text-secondary); line-height: var(--leading-relaxed);">
+          <strong style="color: var(--color-text-primary);">When you hear back,</strong> open this proposal and click
+          <em>Mark accepted</em> or <em>Mark declined</em>. We use that signal to improve which projects
+          you lead with — nothing else.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="toast-row">
+  <div class="toast toast--success">
+    <span>✓</span>
+    <span>Sent to sara.kim@acme-health.com.  Marked as v3 final.</span>
+    <span class="t-caption" style="color: rgba(255,255,255,0.6); margin-left: var(--space-2);">Just now</span>
+  </div>
+</div>
+
+<nav class="proto-nav" aria-label="prototype navigation">
+  <a href="index.html">Index</a>
+  <span class="proto-nav__sep">·</span>
+  <a href="01-onboarding-proposals.html">1</a>
+  <a href="02-trust-moment.html">2</a>
+  <a href="03-new-proposal.html">3</a>
+  <a href="04-chat-edit.html">4</a>
+  <a href="05-upwork-send.html">5</a>
+  <a class="proto-nav__current" href="06-email-sent.html">6</a>
+</nav>
+</body>
+</html>

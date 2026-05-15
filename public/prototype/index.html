@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Avista — Discovery Prototype</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .hero {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: var(--space-11) var(--space-6);
+  }
+  .hero h1 { margin: 0 0 var(--space-3); }
+  .hero p { margin: 0 0 var(--space-7); color: var(--color-text-secondary); font-size: var(--text-md); }
+  .screen-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+    margin-top: var(--space-7);
+  }
+  .screen-grid a {
+    display: block;
+    padding: var(--space-5);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+  }
+  .screen-grid a:hover {
+    border-color: var(--color-brand-400);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  .screen-grid .num {
+    display: inline-flex;
+    width: 24px; height: 24px;
+    border-radius: var(--radius-full);
+    background: var(--color-brand-50);
+    color: var(--color-brand-800);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-bold);
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--space-2);
+  }
+  .screen-grid h3 { margin: 0 0 var(--space-1); }
+  .screen-grid p { margin: 0; color: var(--color-text-secondary); font-size: var(--text-sm); }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar__brand"><span class="topbar__brand-mark">A</span> Avista</div>
+    <div class="t-caption">Discovery prototype · v0.1 · 2026-05-14</div>
+  </header>
+  <main class="hero">
+    <div class="t-caption" style="text-transform: uppercase; letter-spacing: var(--tracking-wide); margin-bottom: var(--space-3);">For CEO discovery interviews — week of 2026-05-28</div>
+    <h1 class="t-display">Avista — proposals in your voice, written from a job URL.</h1>
+    <p>Click any screen to start the walkthrough. Use the floating nav at the bottom to jump between screens.
+       Designed at 1440×900 desktop; mobile pass comes after discovery.</p>
+
+    <div class="screen-grid">
+      <a href="01-onboarding-proposals.html">
+        <h3><span class="num">1</span>Onboarding · Paste 3 proposals</h3>
+        <p>Step 3 of 3. The tool learns the freelancer's voice from 3 past sent proposals.</p>
+      </a>
+      <a href="02-trust-moment.html">
+        <h3><span class="num">2</span>Trust moment · Generic vs your voice</h3>
+        <p>Side-by-side: generic GPT draft vs the same proposal rewritten in the user's voice.</p>
+      </a>
+      <a href="03-new-proposal.html">
+        <h3><span class="num">3</span>New proposal · URL paste + scrape preview</h3>
+        <p>Single URL in. Avista shows what it read from the listing before drafting.</p>
+      </a>
+      <a href="04-chat-edit.html">
+        <h3><span class="num">4</span>Chat-edit canvas</h3>
+        <p>Split chat / draft with context-aware quick-action chips. Linear versioning + undo.</p>
+      </a>
+      <a href="05-upwork-send.html">
+        <h3><span class="num">5</span>Assisted Upwork send</h3>
+        <p>Browser extension popover on the Upwork compose page. ToS-compliant copy-paste flow.</p>
+      </a>
+      <a href="06-email-sent.html">
+        <h3><span class="num">6</span>Email send + sent confirmation</h3>
+        <p>Direct email to client. Quiet ✓ end-state, no gamification.</p>
+      </a>
+    </div>
+  </main>
+</div>
+</body>
+</html>
