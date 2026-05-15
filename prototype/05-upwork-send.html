@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Avista · Assisted Upwork send</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  body { background: var(--color-ink-100); }
+
+  /* Simulated browser chrome */
+  .browser {
+    max-width: 1280px;
+    margin: var(--space-7) auto var(--space-11);
+    background: var(--color-bg-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    border: 1px solid var(--color-border-subtle);
+  }
+  .browser__chrome {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-ink-50);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .traffic { display: flex; gap: 6px; }
+  .traffic span {
+    width: 12px; height: 12px; border-radius: var(--radius-full);
+    background: var(--color-ink-300);
+  }
+  .traffic span:nth-child(1) { background: #FF5F57; }
+  .traffic span:nth-child(2) { background: #FFBD2E; }
+  .traffic span:nth-child(3) { background: #28C840; }
+  .url-pill {
+    flex: 1;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-full);
+    padding: 6px var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .ext-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--color-brand-500), var(--color-brand-800));
+    color: var(--color-text-inverse);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-weight: var(--weight-bold);
+    font-size: var(--text-xs);
+    position: relative;
+    cursor: pointer;
+  }
+  .ext-icon::after {
+    content: '';
+    position: absolute;
+    top: -2px; right: -2px;
+    width: 8px; height: 8px;
+    background: var(--color-success-500);
+    border-radius: var(--radius-full);
+    border: 2px solid var(--color-bg-surface);
+  }
+
+  /* Upwork page mock */
+  .upwork {
+    position: relative;
+    min-height: 640px;
+    padding: var(--space-7);
+    background: var(--color-bg-surface);
+  }
+  .upwork__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .upwork__logo {
+    font-weight: var(--weight-bold);
+    color: #14a800;
+    font-size: var(--text-md);
+    letter-spacing: -0.02em;
+  }
+  .upwork__crumb {
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+  }
+  .upwork__title {
+    margin: 0 0 var(--space-2);
+    color: var(--color-text-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+  }
+  .upwork__sub {
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+    margin: 0 0 var(--space-6);
+  }
+  .upwork__field-label {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-display);
+    margin: var(--space-6) 0 var(--space-2);
+  }
+  .upwork__textarea {
+    width: 100%;
+    min-height: 260px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    font-family: inherit;
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    line-height: var(--leading-relaxed);
+    background: var(--color-bg-surface);
+  }
+  .upwork__textarea:focus { outline: 2px solid #14a800; border-color: #14a800; }
+  .upwork__bid {
+    display: flex;
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+  .upwork__bid label { font-size: var(--text-xs); color: var(--color-text-secondary); }
+  .upwork__bid .field { margin-bottom: 0; flex: 1; }
+  .upwork__submit {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--space-7);
+  }
+  .upwork-btn {
+    background: #14a800;
+    color: white;
+    height: 44px;
+    padding: 0 var(--space-7);
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: var(--weight-semibold);
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+
+  /* Avista extension popover */
+  .ext-popover {
+    position: absolute;
+    top: -12px;
+    right: -16px;
+    width: 380px;
+    background: var(--color-bg-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--color-border-subtle);
+    overflow: hidden;
+    z-index: 5;
+  }
+  .ext-popover__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-5);
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: linear-gradient(180deg, var(--color-brand-50), var(--color-bg-surface));
+  }
+  .ext-popover__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .ext-popover__title strong {
+    font-size: var(--text-sm);
+    color: var(--color-text-display);
+    font-weight: var(--weight-semibold);
+  }
+  .ext-popover__title small {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+  }
+  .ext-popover__body { padding: var(--space-5); }
+  .ext-popover__draft-summary {
+    background: var(--color-bg-raised);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-snug);
+    max-height: 76px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: var(--space-4);
+  }
+  .ext-popover__draft-summary::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 28px;
+    background: linear-gradient(to top, var(--color-bg-raised), transparent);
+  }
+  .ext-popover__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .ext-popover__footer {
+    padding: var(--space-3) var(--space-5);
+    background: var(--color-bg-raised);
+    border-top: 1px solid var(--color-border-subtle);
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-snug);
+  }
+  .ext-popover__pointer {
+    position: absolute;
+    top: 8px;
+    right: 32px;
+    width: 16px; height: 16px;
+    background: var(--color-brand-50);
+    border-left: 1px solid var(--color-border-subtle);
+    border-top: 1px solid var(--color-border-subtle);
+    transform: rotate(45deg) translate(-2px, -2px);
+    z-index: -1;
+  }
+  .send-hint {
+    background: var(--color-ink-25);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    margin-top: var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .send-hint strong { color: var(--color-text-primary); font-weight: var(--weight-semibold); }
+</style>
+</head>
+<body>
+<header class="topbar" style="background: var(--color-ink-50);">
+  <div class="topbar__brand"><span class="topbar__brand-mark">A</span> Avista</div>
+  <div class="t-caption">Step 5 of 6 · Send via Upwork</div>
+  <a class="btn btn--ghost btn--sm" href="04-chat-edit.html">← Back to draft</a>
+</header>
+
+<div class="browser">
+  <div class="browser__chrome">
+    <div class="traffic"><span></span><span></span><span></span></div>
+    <div class="url-pill">
+      <span style="color:var(--color-success-500);">🔒</span>
+      www.upwork.com/jobs/~01a92f7c4b9e23d8d2/proposal
+    </div>
+    <span class="ext-icon" title="Avista extension active">A</span>
+  </div>
+
+  <div class="upwork">
+
+    <div class="ext-popover">
+      <div class="ext-popover__pointer"></div>
+      <div class="ext-popover__head">
+        <div class="ext-popover__title">
+          <span class="topbar__brand-mark">A</span>
+          <div>
+            <strong>Draft ready</strong>
+            <small>Senior React Engineer · Acme Health</small>
+          </div>
+        </div>
+        <span class="chip chip--scraped">v3</span>
+      </div>
+      <div class="ext-popover__body">
+        <div class="t-caption" style="margin-bottom: var(--space-2);">Last edited 2 min ago · 167 words</div>
+        <div class="ext-popover__draft-summary">
+          Hey — saw the listing. The React 16 → 18 + Suspense migration is exactly what I was shipping
+          last quarter on shopify-helper.dev — went off React 16 in three weeks with zero customer-facing
+          downtime, and that codebase was a similar size to a patient-facing billing portal…
+        </div>
+        <div class="ext-popover__actions">
+          <button class="btn btn--primary btn--block">Paste into Upwork cover letter</button>
+          <button class="btn btn--secondary btn--block">Edit in Avista first</button>
+        </div>
+      </div>
+      <div class="ext-popover__footer">
+        After pasting, review the text and click <strong>Submit a Proposal</strong> on Upwork.
+        We never send for you — that's against Upwork's terms, and we won't risk your account.
+      </div>
+    </div>
+
+    <div class="upwork__head">
+      <span class="upwork__logo">upwork</span>
+      <span class="upwork__crumb">/ Jobs / Submit a Proposal</span>
+    </div>
+
+    <h1 class="upwork__title">Senior React Engineer — Billing Portal v2</h1>
+    <p class="upwork__sub">Posted 2 hours ago · Hourly · $60–$80/hr · 3-month project · Acme Health</p>
+
+    <div class="upwork__field-label">Cover letter</div>
+    <textarea class="upwork__textarea" placeholder="Introduce yourself and explain why you're the best fit for this project…"></textarea>
+
+    <div class="upwork__bid">
+      <div class="field">
+        <label>Your hourly rate</label>
+        <input class="input" value="$85.00 /hr" />
+      </div>
+      <div class="field">
+        <label>You'll receive</label>
+        <input class="input" value="$80.75 /hr after Upwork's 5% fee" />
+      </div>
+    </div>
+
+    <div class="send-hint">
+      <span style="font-size:20px;">💡</span>
+      <div>
+        <strong>How this works:</strong> click <em>Paste into Upwork cover letter</em> in the Avista popover.
+        Your draft fills the textarea above. Read it, edit if you want, then click Upwork's
+        <em>Submit a Proposal</em> button below. We'll mark it sent when you come back.
+      </div>
+    </div>
+
+    <div class="upwork__submit">
+      <button class="upwork-btn">Submit a Proposal</button>
+    </div>
+  </div>
+</div>
+
+<nav class="proto-nav" aria-label="prototype navigation">
+  <a href="index.html">Index</a>
+  <span class="proto-nav__sep">·</span>
+  <a href="01-onboarding-proposals.html">1</a>
+  <a href="02-trust-moment.html">2</a>
+  <a href="03-new-proposal.html">3</a>
+  <a href="04-chat-edit.html">4</a>
+  <a class="proto-nav__current" href="05-upwork-send.html">5</a>
+  <a href="06-email-sent.html">6</a>
+</nav>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>Avista · Onboarding · Step 3</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  .onboard {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-9) var(--space-6) var(--space-11);
+    background: var(--color-bg-canvas);
+  }
+  .onboard__head {
+    width: 100%;
+    max-width: 960px;
+    margin-bottom: var(--space-8);
+  }
+  .onboard__crumb {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-text-secondary);
+  }
+  .onboard__grid {
+    width: 100%;
+    max-width: 960px;
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: var(--space-7);
+    align-items: start;
+  }
+  .proposal {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    margin-bottom: var(--space-4);
+    transition: border-color var(--duration-fast);
+  }
+  .proposal:focus-within { border-color: var(--color-brand-400); }
+  .proposal__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+  }
+  .proposal__name {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text-display);
+  }
+  .proposal__hint {
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+  }
+  .proposal textarea {
+    min-height: 88px;
+    border: none;
+    padding: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-primary);
+    box-shadow: none !important;
+    background: transparent;
+  }
+  .proposal textarea:focus { box-shadow: none; }
+  .proposal__count {
+    margin-top: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+    text-align: right;
+  }
+  .sidecard {
+    background: var(--color-brand-50);
+    border: 1px solid var(--color-brand-200);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+  .sidecard h3 {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-md);
+    color: var(--color-brand-900);
+  }
+  .sidecard p {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-brand-900);
+    line-height: var(--leading-normal);
+  }
+  .onboard__footer {
+    width: 100%;
+    max-width: 960px;
+    margin-top: var(--space-8);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar__brand"><span class="topbar__brand-mark">A</span> Avista</div>
+    <div style="display:flex;align-items:center;gap:var(--space-3);min-width:240px;">
+      <span class="t-caption" style="white-space:nowrap;">Step 3 of 3</span>
+      <div class="progress" style="width:160px;"><div class="progress__fill" style="width:90%;"></div></div>
+    </div>
+    <button class="btn btn--ghost btn--sm">Save &amp; exit</button>
+  </header>
+
+  <main class="onboard">
+    <div class="onboard__head">
+      <div class="onboard__crumb">
+        <span>Onboarding · Teach your voice</span>
+        <span>Resume ✓  ·  Portfolio ✓  ·  <strong style="color:var(--color-text-primary);">Voice samples</strong></span>
+      </div>
+      <h1 class="t-h1" style="margin: 0 0 var(--space-2);">Teach us how you write.</h1>
+      <p class="t-body" style="color: var(--color-text-secondary); margin: 0;">
+        Paste 3 proposals you've sent before. We learn how you write — short or long, confident or warm,
+        bullets or prose — and match it. Your words never train other people's drafts.
+      </p>
+    </div>
+
+    <div class="onboard__grid">
+      <div>
+        <div class="proposal">
+          <div class="proposal__head">
+            <span class="proposal__name">Proposal 1 of 3</span>
+            <span class="proposal__hint">Paste the full text · 80–500 words is ideal</span>
+          </div>
+          <textarea class="textarea" placeholder="Paste a proposal you actually sent. Real one, not a draft. We need your real voice, including the typos you didn't catch.">Hey — saw the Stripe-integration role you posted yesterday. I built and shipped two billing portals on Stripe in the last 18 months (one for a 12K-MAU SaaS, the other for a Series A marketplace), so this is the kind of brief I can pick up fast.
+
+Most relevant work:
+- payments.acme.io — full Stripe Billing rewrite, dropped failed-payment churn 31%
+- ledger.studio — invoice + webhook reconciliation, on Stripe Connect
+
+I'd start by reading your current checkout flow and the failure modes you're seeing on dunning, then we scope from there.
+
+Rate: $85/hr, weekly invoiced. Can do a 30-min kickoff this week.
+
+— Alex</textarea>
+          <div class="proposal__count">847 / 4000 chars</div>
+        </div>
+
+        <div class="proposal">
+          <div class="proposal__head">
+            <span class="proposal__name">Proposal 2 of 3</span>
+            <span class="proposal__hint">Paste the full text</span>
+          </div>
+          <textarea class="textarea" placeholder="Paste a second proposal...">Hi — quick read on the brief: you need someone who can take a React 16 app to React 18 + Suspense without breaking the routing layer. I've done this exact migration twice (one Next.js, one CRA → Vite). Happy to start with a one-day audit and a written upgrade plan before you commit to the full rewrite.
+
+Recent React 18 work:
+- Migrated workflow.io off React 16 in 3 weeks, zero downtime
+- Built the design-system Suspense boundaries for shopify-helper.dev
+
+Available this week. Rate $80/hr, or fixed-price audit at $1.5K.
+
+— Alex</textarea>
+          <div class="proposal__count">621 / 4000 chars</div>
+        </div>
+
+        <div class="proposal">
+          <div class="proposal__head">
+            <span class="proposal__name">Proposal 3 of 3</span>
+            <span class="proposal__hint">Paste the full text</span>
+          </div>
+          <textarea class="textarea" placeholder="Paste a third proposal...">Hi Sara — saw the listing and the link to your current dashboard. The latency on the analytics tab looks like an N+1 on the events query — happy to confirm in an hour of pairing if useful.
+
+Background: 8 years React + TypeScript, last 3 on perf-critical b2b dashboards (Linear-style). I've cut p95 render from 800ms → 180ms on a similar dataset shape.
+
+Suggesting two options:
+1. Audit + written recommendations — $1.2K, 1 week
+2. Audit + implementation — hourly $80/hr, ~2 weeks
+
+Either way I start by reading your code. — Alex</textarea>
+          <div class="proposal__count">638 / 4000 chars</div>
+        </div>
+      </div>
+
+      <aside class="sidecard">
+        <h3>Don't have 3 sent ones?</h3>
+        <p>
+          Answer five quick questions and we'll bootstrap your voice from those.
+          You can replace with real proposals later — better results.
+        </p>
+        <button class="btn btn--secondary btn--block">Use the questionnaire instead</button>
+        <hr class="divider" style="margin: var(--space-5) 0 var(--space-4);">
+        <div class="t-body-sm" style="color: var(--color-brand-900);">
+          <strong>Why three?</strong><br>
+          <span class="t-muted" style="color: var(--color-brand-800);">
+            One proposal sounds like a template. Three lets us see what's actually you — your openers, sentence
+            length, the bits you always include.
+          </span>
+        </div>
+      </aside>
+    </div>
+
+    <div class="onboard__footer">
+      <button class="btn btn--ghost">← Back to portfolio</button>
+      <div class="row">
+        <span class="t-caption">3 of 3 pasted</span>
+        <button class="btn btn--primary btn--lg">Learn my voice →</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<nav class="proto-nav" aria-label="prototype navigation">
+  <a href="index.html">Index</a>
+  <span class="proto-nav__sep">·</span>
+  <a class="proto-nav__current" href="01-onboarding-proposals.html">1</a>
+  <a href="02-trust-moment.html">2</a>
+  <a href="03-new-proposal.html">3</a>
+  <a href="04-chat-edit.html">4</a>
+  <a href="05-upwork-send.html">5</a>
+  <a href="06-email-sent.html">6</a>
+</nav>
+</body>
+</html>

@@ -1,0 +1,185 @@
+/*
+ * Avista — design system tokens (v0)
+ * Single source of truth for color, type, spacing, radius, motion.
+ * Owned by UXDesigner. Implementation must consume these — never one-off values.
+ * Spec: /AVI/issues/AVI-20#document-design-system
+ */
+
+:root {
+  /* === COLOR ============================================================ */
+  /* Brand — Avista Teal. Confident, trustworthy, not stock SaaS blue. */
+  --color-brand-50:  #ECFDF5;
+  --color-brand-100: #D1FAE5;
+  --color-brand-200: #A7F3D0;
+  --color-brand-300: #6EE7B7;
+  --color-brand-400: #34D399;
+  --color-brand-500: #14B8A6;
+  --color-brand-600: #0D9488;
+  --color-brand-700: #0F766E; /* primary action */
+  --color-brand-800: #115E59;
+  --color-brand-900: #134E4A;
+
+  /* Ink — warm-tinted slate. For text, borders, surfaces. */
+  --color-ink-0:    #FFFFFF;
+  --color-ink-25:   #FBFAF9; /* canvas */
+  --color-ink-50:   #F7F5F2; /* raised surface */
+  --color-ink-100:  #EFECE7;
+  --color-ink-200:  #E2DED6; /* hairline border */
+  --color-ink-300:  #C8C2B6;
+  --color-ink-400:  #9B9486; /* muted text */
+  --color-ink-500:  #6E6759; /* secondary text */
+  --color-ink-600:  #4F4940;
+  --color-ink-700:  #34302A; /* body text */
+  --color-ink-800:  #211F1B;
+  --color-ink-900:  #0F0E0C; /* display */
+
+  /* Accents */
+  --color-amber-50:  #FFFBEB;
+  --color-amber-200: #FDE68A;
+  --color-amber-500: #F59E0B; /* inferred-from-JD */
+  --color-amber-700: #B45309;
+
+  --color-success-50:  #ECFDF5;
+  --color-success-500: #10B981;
+  --color-success-700: #047857;
+
+  --color-danger-50:  #FEF2F2;
+  --color-danger-500: #EF4444;
+  --color-danger-700: #B91C1C;
+
+  --color-info-50:  #EFF6FF;
+  --color-info-500: #3B82F6;
+  --color-info-700: #1D4ED8;
+
+  /* Semantic aliases — components reference these, not raw values. */
+  --color-bg-canvas:    var(--color-ink-25);
+  --color-bg-surface:   var(--color-ink-0);
+  --color-bg-raised:    var(--color-ink-50);
+  --color-bg-overlay:   rgba(15, 14, 12, 0.48);
+
+  --color-border-subtle: var(--color-ink-200);
+  --color-border-strong: var(--color-ink-300);
+  --color-border-focus:  var(--color-brand-700);
+
+  --color-text-primary:   var(--color-ink-700);
+  --color-text-secondary: var(--color-ink-500);
+  --color-text-tertiary:  var(--color-ink-400);
+  --color-text-inverse:   var(--color-ink-0);
+  --color-text-brand:     var(--color-brand-700);
+  --color-text-display:   var(--color-ink-900);
+
+  --color-action-primary-bg:        var(--color-brand-700);
+  --color-action-primary-bg-hover:  var(--color-brand-800);
+  --color-action-primary-text:      var(--color-ink-0);
+
+  --color-action-secondary-bg:       var(--color-ink-0);
+  --color-action-secondary-bg-hover: var(--color-ink-50);
+  --color-action-secondary-text:     var(--color-ink-700);
+  --color-action-secondary-border:   var(--color-ink-300);
+
+  --color-chip-scraped-bg:    var(--color-brand-50);
+  --color-chip-scraped-text:  var(--color-brand-800);
+  --color-chip-scraped-border:var(--color-brand-200);
+
+  --color-chip-inferred-bg:    var(--color-amber-50);
+  --color-chip-inferred-text:  var(--color-amber-700);
+  --color-chip-inferred-border:var(--color-amber-200);
+
+  --color-chip-missing-bg:    var(--color-ink-50);
+  --color-chip-missing-text:  var(--color-ink-500);
+  --color-chip-missing-border:var(--color-ink-200);
+
+  /* === TYPOGRAPHY ======================================================== */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter,
+               "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Type scale — modular ratio ≈ 1.18, base 16px */
+  --text-xs:   12px;
+  --text-sm:   13px;
+  --text-base: 15px;
+  --text-md:   17px;
+  --text-lg:   20px;
+  --text-xl:   24px;
+  --text-2xl:  30px;
+  --text-3xl:  36px;
+  --text-4xl:  44px;
+
+  --leading-tight:  1.2;
+  --leading-snug:   1.35;
+  --leading-normal: 1.5;
+  --leading-relaxed:1.65;
+
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  --tracking-tight:  -0.011em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.025em;
+
+  /* === SPACING (4px grid) ================================================ */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-7:  32px;
+  --space-8:  40px;
+  --space-9:  48px;
+  --space-10: 64px;
+  --space-11: 80px;
+  --space-12: 96px;
+
+  /* === RADIUS ============================================================ */
+  --radius-none: 0;
+  --radius-xs:   4px;
+  --radius-sm:   6px;  /* chips, inputs */
+  --radius-md:   8px;  /* buttons, cards */
+  --radius-lg:   12px; /* modals, drawers */
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* === SHADOWS =========================================================== */
+  --shadow-xs:  0 1px 1px rgba(15, 14, 12, 0.04);
+  --shadow-sm:  0 1px 2px rgba(15, 14, 12, 0.06), 0 1px 1px rgba(15, 14, 12, 0.04);
+  --shadow-md:  0 4px 8px -2px rgba(15, 14, 12, 0.08), 0 2px 4px -2px rgba(15, 14, 12, 0.06);
+  --shadow-lg:  0 12px 24px -8px rgba(15, 14, 12, 0.12), 0 4px 8px -4px rgba(15, 14, 12, 0.08);
+  --shadow-xl:  0 24px 48px -12px rgba(15, 14, 12, 0.18);
+  --shadow-focus: 0 0 0 3px rgba(15, 118, 110, 0.22);
+
+  /* === MOTION ============================================================ */
+  /* Doherty <400ms feedback. Default snappy; reduce for accessibility. */
+  --duration-instant:  80ms;
+  --duration-fast:     140ms;
+  --duration-base:     200ms;
+  --duration-slow:     320ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter:    cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit:     cubic-bezier(0.4, 0, 1, 1);
+
+  /* === LAYOUT ============================================================ */
+  --layout-content-max: 1200px;
+  --layout-onboard-max: 640px;
+  --layout-form-max:    520px;
+  --layout-gutter:      var(--space-6);
+
+  /* === Z-INDEX =========================================================== */
+  --z-base:    0;
+  --z-sticky:  10;
+  --z-drawer:  40;
+  --z-modal:   50;
+  --z-toast:   60;
+  --z-popover: 70;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast:    0ms;
+    --duration-base:    0ms;
+    --duration-slow:    0ms;
+  }
+}

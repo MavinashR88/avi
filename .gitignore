@@ -62,3 +62,12 @@ target/
 # Containers / local infra
 .docker/
 docker-compose.override.yml
+
+# Interview raw artifacts — never commit recordings, unredacted transcripts, or PII mappings.
+interviews/raw/
+interviews/dry-run/
+interviews/redacted/
+interviews/notes/
+*.mp4
+*.m4a
+*.wav
