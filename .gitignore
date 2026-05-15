@@ -71,3 +71,6 @@ interviews/notes/
 *.mp4
 *.m4a
 *.wav
+
+# TypeScript incremental build info
+tsconfig.tsbuildinfo
