@@ -39,12 +39,18 @@ export default async function AppPage() {
           voice. Edit inline before you send.
         </p>
 
-        <div className="mt-8">
+        <div className="mt-8 flex flex-wrap items-center gap-3">
           <Link
             href="/generate"
             className="inline-flex items-center rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90"
           >
             Open the generator →
+          </Link>
+          <Link
+            href="/proposals"
+            className="inline-flex items-center rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-ink hover:bg-slate-50"
+          >
+            View past proposals
           </Link>
         </div>
       </section>

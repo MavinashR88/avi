@@ -4,8 +4,12 @@ import { useRef, useState } from 'react';
 
 type Status = 'idle' | 'streaming' | 'done' | 'error';
 
-export function GeneratorForm() {
-  const [jobDescription, setJobDescription] = useState('');
+export function GeneratorForm({
+  initialJobDescription = '',
+}: {
+  initialJobDescription?: string;
+} = {}) {
+  const [jobDescription, setJobDescription] = useState(initialJobDescription);
   const [skills, setSkills] = useState('');
   const [rate, setRate] = useState('');
   const [tone, setTone] = useState('');

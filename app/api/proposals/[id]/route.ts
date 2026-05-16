@@ -5,10 +5,14 @@ import { authOptions } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
-// TODO(AVI-30): enforce ownership check once real auth session is available
-async function findProposal(id: string) {
-  return prisma.proposal.findUnique({
-    where: { id },
+function getUserId(session: unknown): string | null {
+  const s = session as { user?: { id?: string } } | null;
+  return s?.user?.id ?? null;
+}
+
+async function findOwnedProposal(id: string, userId: string) {
+  return prisma.proposal.findFirst({
+    where: { id, userId },
     select: {
       id: true,
       userId: true,
@@ -23,9 +27,13 @@ export async function GET(
   _req: Request,
   { params }: { params: { id: string } },
 ) {
-  await getServerSession(authOptions); // auth wire-up point for AVI-30
+  const session = await getServerSession(authOptions);
+  const userId = getUserId(session);
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-  const proposal = await findProposal(params.id);
+  const proposal = await findOwnedProposal(params.id, userId);
   if (!proposal) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }
@@ -37,9 +45,13 @@ export async function DELETE(
   _req: Request,
   { params }: { params: { id: string } },
 ) {
-  await getServerSession(authOptions); // auth wire-up point for AVI-30
+  const session = await getServerSession(authOptions);
+  const userId = getUserId(session);
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-  const existing = await findProposal(params.id);
+  const existing = await findOwnedProposal(params.id, userId);
   if (!existing) {
     return NextResponse.json({ error: 'Not found' }, { status: 404 });
   }

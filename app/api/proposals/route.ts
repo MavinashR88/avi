@@ -6,7 +6,6 @@ import { authOptions } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
-// TODO(AVI-30): replace stub userId with enforced real session once auth lands
 function getUserId(session: unknown): string | null {
   const s = session as { user?: { id?: string } } | null;
   return s?.user?.id ?? null;
@@ -20,6 +19,9 @@ const CreateSchema = z.object({
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   const userId = getUserId(session);
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   let body: unknown;
   try {
@@ -54,10 +56,12 @@ export async function POST(req: Request) {
 export async function GET() {
   const session = await getServerSession(authOptions);
   const userId = getUserId(session);
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-  // TODO(AVI-30): enforce userId filter once auth is real; unauthenticated returns empty
   const proposals = await prisma.proposal.findMany({
-    where: userId ? { userId } : { userId: null },
+    where: { userId },
     orderBy: { createdAt: 'desc' },
     select: {
       id: true,

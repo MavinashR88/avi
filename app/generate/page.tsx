@@ -2,15 +2,31 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 import { SignOutButton } from '@/components/sign-out-button';
 import { GeneratorForm } from '@/components/generator-form';
 
 export const dynamic = 'force-dynamic';
 
-export default async function GeneratePage() {
+export default async function GeneratePage({
+  searchParams,
+}: {
+  searchParams?: { reuse?: string };
+}) {
   const session = await getServerSession(authOptions);
-  if (!session?.user) {
+  const userId = (session?.user as { id?: string } | undefined)?.id;
+  if (!session?.user || !userId) {
     redirect('/auth/login?callbackUrl=%2Fgenerate');
+  }
+
+  let initialJobDescription = '';
+  const reuseId = searchParams?.reuse;
+  if (reuseId) {
+    const source = await prisma.proposal.findFirst({
+      where: { id: reuseId, userId },
+      select: { jobDescription: true },
+    });
+    if (source) initialJobDescription = source.jobDescription;
   }
 
   return (
@@ -23,6 +39,9 @@ export default async function GeneratePage() {
           <span className="text-lg font-semibold tracking-tight">Avista</span>
         </Link>
         <div className="flex items-center gap-3 text-sm text-ink-muted">
+          <Link href="/proposals" className="hover:text-ink">
+            History
+          </Link>
           <span>{session.user.email}</span>
           <SignOutButton />
         </div>
@@ -40,8 +59,14 @@ export default async function GeneratePage() {
           you want a sharper draft. Edit before you send — Avista just opens the door.
         </p>
 
+        {initialJobDescription && (
+          <p className="mt-4 rounded-md border border-brand/30 bg-brand/5 px-3 py-2 text-xs text-brand">
+            Reusing job description from a past proposal. Edit and re-generate as needed.
+          </p>
+        )}
+
         <div className="mt-8">
-          <GeneratorForm />
+          <GeneratorForm initialJobDescription={initialJobDescription} />
         </div>
       </section>
     </main>
