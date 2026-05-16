@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 import { getProposalModel } from '@/lib/gemini';
 
 export const runtime = 'nodejs';
