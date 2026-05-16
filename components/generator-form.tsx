@@ -3,12 +3,16 @@
 import { useRef, useState } from 'react';
 
 type Status = 'idle' | 'streaming' | 'done' | 'error';
+type FetchStatus = 'idle' | 'fetching' | 'error';
 
 export function GeneratorForm({
   initialJobDescription = '',
 }: {
   initialJobDescription?: string;
 } = {}) {
+  const [jobUrl, setJobUrl] = useState('');
+  const [fetchStatus, setFetchStatus] = useState<FetchStatus>('idle');
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [jobDescription, setJobDescription] = useState(initialJobDescription);
   const [skills, setSkills] = useState('');
   const [rate, setRate] = useState('');
@@ -20,6 +24,35 @@ export function GeneratorForm({
   const abortRef = useRef<AbortController | null>(null);
 
   const canSubmit = jobDescription.trim().length >= 20 && status !== 'streaming';
+
+  async function onFetchUrl() {
+    const trimmed = jobUrl.trim();
+    if (!trimmed) return;
+    setFetchError(null);
+    setFetchStatus('fetching');
+    try {
+      const res = await fetch('/api/scrape-job', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: trimmed }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setFetchError(data?.error ?? `Request failed (${res.status})`);
+        setFetchStatus('error');
+        return;
+      }
+      if (data.description) {
+        setJobDescription(
+          data.title ? `${data.title}\n\n${data.description}` : data.description,
+        );
+      }
+      setFetchStatus('idle');
+    } catch {
+      setFetchError('Failed to fetch job page — paste the description manually.');
+      setFetchStatus('error');
+    }
+  }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -84,6 +117,45 @@ export function GeneratorForm({
 
   return (
     <form onSubmit={onSubmit} className="space-y-6">
+      <div>
+        <label htmlFor="jobUrl" className="block text-sm font-medium">
+          Paste Upwork job URL{' '}
+          <span className="font-normal text-ink-muted">(optional)</span>
+        </label>
+        <div className="mt-1 flex gap-2">
+          <input
+            id="jobUrl"
+            type="url"
+            value={jobUrl}
+            onChange={(e) => {
+              setJobUrl(e.target.value);
+              setFetchError(null);
+            }}
+            onPaste={(e) => {
+              const pasted = e.clipboardData.getData('text').trim();
+              if (pasted.includes('upwork.com')) {
+                e.preventDefault();
+                setJobUrl(pasted);
+                setFetchError(null);
+              }
+            }}
+            placeholder="https://www.upwork.com/jobs/~..."
+            className="min-w-0 flex-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
+          />
+          <button
+            type="button"
+            disabled={!jobUrl.trim() || fetchStatus === 'fetching'}
+            onClick={onFetchUrl}
+            className="shrink-0 rounded-md bg-slate-100 px-3 py-2 text-sm font-medium hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {fetchStatus === 'fetching' ? 'Fetching…' : 'Fetch'}
+          </button>
+        </div>
+        {fetchError && (
+          <p className="mt-1.5 text-xs text-red-600">{fetchError}</p>
+        )}
+      </div>
+
       <div>
         <label htmlFor="job" className="block text-sm font-medium">
           Job description
