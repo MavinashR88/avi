@@ -74,3 +74,4 @@ interviews/notes/
 
 # TypeScript incremental build info
 tsconfig.tsbuildinfo
+.vercel

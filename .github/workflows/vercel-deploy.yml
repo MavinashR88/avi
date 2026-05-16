@@ -1,0 +1,67 @@
+name: Vercel Deploy
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+# Deploys the Next.js app to Vercel on every push to main.
+# Requires repo secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID.
+# See foundation.md §3 (deploy target = Vercel, decided 2026-05-15 after Fly.io pivot).
+# Job no-ops if VERCEL_TOKEN is unset so the workflow is idempotent before secrets land.
+
+jobs:
+  deploy:
+    name: Deploy to Vercel (prod)
+    runs-on: ubuntu-latest
+    concurrency:
+      group: vercel-deploy-main
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check VERCEL_TOKEN presence
+        id: gate
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then
+            echo "VERCEL_TOKEN not configured — skipping deploy step."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node
+        if: steps.gate.outputs.skip == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Vercel CLI
+        if: steps.gate.outputs.skip == 'false'
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel environment
+        if: steps.gate.outputs.skip == 'false'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: Build
+        if: steps.gate.outputs.skip == 'false'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+
+      - name: Deploy
+        if: steps.gate.outputs.skip == 'false'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"

@@ -37,10 +37,15 @@
 
 ### Decision
 
-**Default: Fly.io for backend services.**  
-Rationale: lowest ops burden that still supports long-running processes and streaming LLM responses. Cheap to start ($3–10/mo), easy to migrate off. If the niche demands HIPAA or on-prem, revisit AWS.
+**Default: Vercel** (pivoted 2026-05-15 from the original Fly.io plan).  
+Rationale: at MVP stage the app is a Next.js 14 landing + waitlist + lightweight serverless endpoints — no long-running processes yet, no streaming LLM calls in the live deploy path. Vercel's Hobby tier is free, has no credit-card requirement, and deploys Next.js natively with zero config. Live as of 2026-05-15: https://avista-psi.vercel.app.
 
-Keep Vercel as an optional frontend CDN (Next.js / SvelteKit) separated from the API — only if the stack splits along that boundary.
+**Migration trigger back to Fly.io (or alternative):** the moment we need any of the following, revisit:
+- A long-running process (background worker, queue consumer, websocket server).
+- Streaming LLM responses that exceed Vercel's 60-second serverless function timeout (Hobby) / 5-minute timeout (Pro).
+- Persistent disk or a long-lived connection (DB pool to a non-managed Postgres, etc.).
+
+Until then, Vercel + Next.js API routes is sufficient and free. The provider abstraction in §6 means swapping deploy targets does not touch product code.
 
 ---
 
@@ -56,7 +61,7 @@ Keep Vercel as an optional frontend CDN (Next.js / SvelteKit) separated from the
 
 ### Structured logging
 
-**OpenTelemetry (OTel) SDK → stdout → Fly.io log drain** in early MVP.  
+**OpenTelemetry (OTel) SDK → stdout → Vercel Log Drains** in early MVP.  
 Long-term: route OTLP to a managed backend (Grafana Cloud free tier or BetterStack) once log volume justifies it.
 
 ### Stack-lock action
@@ -77,13 +82,13 @@ When the app stack is chosen:
 |-------------|---------------|----------------------|
 | Local dev | `.env` file (git-ignored) | Loaded by the app or a dotenv loader |
 | CI | GitHub Actions encrypted secrets | Injected as env vars via `env:` in the workflow |
-| Production (Fly.io) | `fly secrets set KEY=VALUE` (encrypted at rest) | Injected as env vars at runtime |
+| Production (Vercel) | `vercel env add KEY production` or the Vercel dashboard (encrypted at rest) | Injected as env vars at runtime |
 
 ### Rules
 
 1. **Never commit secrets.** `.env` is in `.gitignore`; `.env.example` with placeholder values is committed.
 2. **One source of truth per environment.** Dev: `.env`; CI: GitHub secrets; prod: Fly secrets. No cross-env leakage.
-3. **Rotation:** rotate API keys via `fly secrets set` (zero-downtime rolling restart) or GitHub secrets UI.
+3. **Rotation:** rotate API keys via `vercel env rm KEY production && vercel env add KEY production` (or the dashboard) or GitHub secrets UI. Deploy GH Action secrets (`VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`) are stored in GitHub repo secrets.
 4. **Key naming convention:** `SCREAMING_SNAKE_CASE`, prefixed by service — e.g., `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `SENTRY_DSN`, `DATABASE_URL`.
 5. **Secret scanning:** enable GitHub secret scanning on the repo to catch accidental commits.
 
