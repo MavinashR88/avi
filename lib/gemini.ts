@@ -12,7 +12,9 @@ export function getGemini(): GoogleGenerativeAI {
   return client;
 }
 
-export const PROPOSAL_MODEL = 'gemini-1.5-flash';
+// gemini-1.5-flash returns 404 on v1beta as of 2026 (model deprecated by Google).
+// gemini-2.0-flash is the current Flash-class generation and matches the spec intent.
+export const PROPOSAL_MODEL = 'gemini-2.0-flash';
 
 export function getProposalModel(): GenerativeModel {
   return getGemini().getGenerativeModel({ model: PROPOSAL_MODEL });
