@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { getAnthropic, PROPOSAL_MODEL } from '@/lib/anthropic';
+import { getProposalModel } from '@/lib/gemini';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -52,12 +52,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
   }
 
-  let anthropic;
+  let model;
   try {
-    anthropic = getAnthropic();
+    model = getProposalModel();
   } catch (err) {
     return NextResponse.json(
-      { error: 'Server is missing ANTHROPIC_API_KEY' },
+      { error: 'Server is missing GEMINI_API_KEY' },
       { status: 503 },
     );
   }
@@ -70,20 +70,16 @@ export async function POST(req: Request) {
       const encoder = new TextEncoder();
       let assembled = '';
       try {
-        const completion = anthropic.messages.stream({
-          model: PROPOSAL_MODEL,
-          max_tokens: 800,
-          messages: [{ role: 'user', content: prompt }],
+        const result = await model.generateContentStream({
+          contents: [{ role: 'user', parts: [{ text: prompt }] }],
+          generationConfig: { maxOutputTokens: 800 },
         });
 
-        for await (const event of completion) {
-          if (
-            event.type === 'content_block_delta' &&
-            event.delta.type === 'text_delta'
-          ) {
-            const chunk = event.delta.text;
-            assembled += chunk;
-            controller.enqueue(encoder.encode(chunk));
+        for await (const chunk of result.stream) {
+          const text = chunk.text();
+          if (text) {
+            assembled += text;
+            controller.enqueue(encoder.encode(text));
           }
         }
 
