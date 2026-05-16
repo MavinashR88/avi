@@ -41,7 +41,7 @@ export function AppNav({ email, activePath }: AppNavProps) {
           <nav className="hidden items-center gap-5 sm:flex">
             {navLink('/generate', 'Generate')}
             {navLink('/proposals', 'Proposals')}
-            {navLink('/profile', 'Profile', true)}
+            {navLink('/profile', 'Profile')}
           </nav>
         </div>
 
@@ -59,7 +59,7 @@ export function AppNav({ email, activePath }: AppNavProps) {
       <nav className="flex items-center gap-5 border-t border-slate-100 px-4 py-2 sm:hidden">
         {navLink('/generate', 'Generate')}
         {navLink('/proposals', 'Proposals')}
-        {navLink('/profile', 'Profile', true)}
+        {navLink('/profile', 'Profile')}
       </nav>
     </header>
   );
