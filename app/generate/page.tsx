@@ -1,51 +1,47 @@
 import Link from 'next/link';
-import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { SignOutButton } from '@/components/sign-out-button';
+import { GeneratorForm } from '@/components/generator-form';
 
 export const dynamic = 'force-dynamic';
 
-export default async function AppPage() {
+export default async function GeneratePage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
-    redirect('/auth/login?callbackUrl=%2Fapp');
+    redirect('/auth/login?callbackUrl=%2Fgenerate');
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl flex-col px-6 py-12">
+    <main className="mx-auto flex min-h-screen max-w-3xl flex-col px-6 py-10">
       <header className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <Link href="/app" className="flex items-center gap-2">
           <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-sm font-semibold text-white">
             A
           </span>
           <span className="text-lg font-semibold tracking-tight">Avista</span>
-        </div>
+        </Link>
         <div className="flex items-center gap-3 text-sm text-ink-muted">
           <span>{session.user.email}</span>
           <SignOutButton />
         </div>
       </header>
 
-      <section className="mt-16">
+      <section className="mt-10">
         <p className="text-xs font-medium uppercase tracking-wider text-brand">
-          Proposal generator · live
+          Proposal generator
         </p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-          Ready when you are.
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight">
+          Paste a job post. Get a proposal.
         </h1>
-        <p className="mt-4 max-w-2xl leading-relaxed text-ink-muted">
-          Paste any Upwork-style job post and Avista will draft a tailored proposal in your
-          voice. Edit inline before you send.
+        <p className="mt-3 max-w-xl leading-relaxed text-ink-muted">
+          Drop the full job description in. Add a few notes about your skills, rate, and tone if
+          you want a sharper draft. Edit before you send — Avista just opens the door.
         </p>
 
         <div className="mt-8">
-          <Link
-            href="/generate"
-            className="inline-flex items-center rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90"
-          >
-            Open the generator →
-          </Link>
+          <GeneratorForm />
         </div>
       </section>
     </main>
