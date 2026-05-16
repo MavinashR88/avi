@@ -72,7 +72,12 @@ export async function POST(req: Request) {
       try {
         const result = await model.generateContentStream({
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
-          generationConfig: { maxOutputTokens: 800 },
+          generationConfig: {
+            maxOutputTokens: 800,
+            // gemini-2.5-flash has built-in thinking; disable it so the
+            // entire token budget is spent on the visible proposal text.
+            thinkingConfig: { thinkingBudget: 0 },
+          } as unknown as Record<string, unknown>,
         });
 
         for await (const chunk of result.stream) {
