@@ -12,9 +12,10 @@ export function getGemini(): GoogleGenerativeAI {
   return client;
 }
 
-// gemini-1.5-flash returns 404 on v1beta as of 2026 (model deprecated by Google).
-// gemini-2.0-flash is the current Flash-class generation and matches the spec intent.
-export const PROPOSAL_MODEL = 'gemini-2.0-flash';
+// Spec asked for gemini-1.5-flash, but it 404s on v1beta as of 2026 (deprecated).
+// gemini-2.0-flash returns 429 free_tier limit: 0 on our key — not on free tier.
+// gemini-2.5-flash is the current free-tier Flash-class model.
+export const PROPOSAL_MODEL = 'gemini-2.5-flash';
 
 export function getProposalModel(): GenerativeModel {
   return getGemini().getGenerativeModel({ model: PROPOSAL_MODEL });
