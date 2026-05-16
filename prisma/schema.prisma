@@ -8,13 +8,23 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
+enum SubscriptionStatus {
+  active
+  inactive
+}
+
 model User {
-  id           String     @id @default(cuid())
-  email        String     @unique
-  passwordHash String
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  proposals    Proposal[]
+  id                  String             @id @default(cuid())
+  email               String             @unique
+  passwordHash        String
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  stripeCustomerId    String?            @unique
+  subscriptionStatus  SubscriptionStatus @default(inactive)
+  proposalsThisMonth  Int                @default(0)
+  proposalsResetAt    DateTime           @default(now())
+  proposals           Proposal[]
+  profile             Profile?
 }
 
 model Proposal {
@@ -26,4 +36,18 @@ model Proposal {
   createdAt     DateTime @default(now())
 
   @@index([userId])
+}
+
+model Profile {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String   @default("")
+  tagline    String   @default("")
+  skills     String   @default("") @db.Text
+  hourlyRate String   @default("")
+  tone       String   @default("professional")
+  bio        String   @default("") @db.Text
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { z } from 'zod';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
 import { getProposalModel } from '@/lib/gemini';
 
 export const runtime = 'nodejs';
@@ -63,12 +62,10 @@ export async function POST(req: Request) {
   }
 
   const prompt = buildPrompt(parsed.data);
-  const jobDescription = parsed.data.jobDescription;
 
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       const encoder = new TextEncoder();
-      let assembled = '';
       try {
         const result = await model.generateContentStream({
           contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -83,19 +80,8 @@ export async function POST(req: Request) {
         for await (const chunk of result.stream) {
           const text = chunk.text();
           if (text) {
-            assembled += text;
             controller.enqueue(encoder.encode(text));
           }
-        }
-
-        if (assembled.trim()) {
-          await prisma.proposal.create({
-            data: {
-              userId,
-              jobDescription,
-              generatedText: assembled.trim(),
-            },
-          });
         }
       } catch (err) {
         const msg = err instanceof Error ? err.message : 'Generation failed';

@@ -18,6 +18,14 @@ export default async function GeneratePage({
     redirect('/auth/login?callbackUrl=%2Fgenerate');
   }
 
+  const sub = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { subscriptionStatus: true },
+  });
+  if (sub?.subscriptionStatus !== 'active') {
+    redirect('/subscribe');
+  }
+
   let initialJobDescription = '';
   const reuseId = searchParams?.reuse;
   if (reuseId) {

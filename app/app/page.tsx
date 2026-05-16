@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import { authOptions } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 import { AppNav } from '@/components/app-nav';
 
 export const dynamic = 'force-dynamic';
@@ -10,6 +11,16 @@ export default async function AppPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user) {
     redirect('/auth/login?callbackUrl=%2Fapp');
+  }
+  const userId = (session.user as { id?: string }).id;
+  if (userId) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { subscriptionStatus: true },
+    });
+    if (user?.subscriptionStatus !== 'active') {
+      redirect('/subscribe');
+    }
   }
 
   return (
