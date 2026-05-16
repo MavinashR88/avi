@@ -12,7 +12,7 @@ body {
 }
 
 body {
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  color: #0f172a;
+  background-color: #FBFAF9; /* canvas warm off-white matching prototype tokens */
+  color: #34302A;            /* ink-700 warm body text */
   -webkit-font-smoothing: antialiased;
 }
