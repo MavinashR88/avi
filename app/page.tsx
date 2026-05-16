@@ -15,9 +15,15 @@ export default function Home() {
           <Link href="/preview" className="hover:text-ink">
             Preview
           </Link>
-          <a href="https://github.com/MavinashR88/avi" className="hover:text-ink">
-            GitHub
-          </a>
+          <Link href="/auth/login" className="hover:text-ink">
+            Log in
+          </Link>
+          <Link
+            href="/auth/signup"
+            className="rounded-md bg-brand px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:opacity-90"
+          >
+            Sign up
+          </Link>
         </nav>
       </header>
 
