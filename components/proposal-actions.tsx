@@ -67,9 +67,9 @@ export function CopyButton({ text, label = 'Copy' }: { text: string; label?: str
     <button
       type="button"
       onClick={onCopy}
-      className="rounded-md border border-slate-300 px-2.5 py-1 text-xs font-medium hover:bg-slate-50"
+      className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold transition hover:bg-slate-50 active:scale-95"
     >
-      {error ? error : copied ? 'Copied' : label}
+      {error ? error : copied ? '✓ Copied' : label}
     </button>
   );
 }

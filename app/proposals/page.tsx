@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { SignOutButton } from '@/components/sign-out-button';
+import { AppNav } from '@/components/app-nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +12,11 @@ function formatDate(d: Date): string {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
+  }).format(d);
+}
+
+function formatTime(d: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
     hour: 'numeric',
     minute: '2-digit',
   }).format(d);
@@ -41,74 +46,71 @@ export default async function ProposalsPage() {
   });
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl flex-col px-6 py-10">
-      <header className="flex items-center justify-between">
-        <Link href="/app" className="flex items-center gap-2">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-sm font-semibold text-white">
-            A
-          </span>
-          <span className="text-lg font-semibold tracking-tight">Avista</span>
-        </Link>
-        <div className="flex items-center gap-3 text-sm text-ink-muted">
-          <span>{session.user.email}</span>
-          <SignOutButton />
-        </div>
-      </header>
+    <div className="flex min-h-screen flex-col">
+      <AppNav email={session.user.email} activePath="/proposals" />
 
-      <section className="mt-10">
-        <div className="flex items-end justify-between gap-4">
+      <main className="mx-auto w-full max-w-3xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
+        <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs font-medium uppercase tracking-wider text-brand">
               Proposal history
             </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-              Your past proposals
+            <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+              Your proposals
             </h1>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink-muted">
-              Newest first. Click any proposal to open it, reuse the job description,
-              or delete it.
+            <p className="mt-1 text-sm text-ink-muted">
+              {proposals.length > 0
+                ? `${proposals.length} proposal${proposals.length !== 1 ? 's' : ''} saved`
+                : 'No proposals yet'}
             </p>
           </div>
           <Link
             href="/generate"
-            className="shrink-0 rounded-md bg-brand px-3.5 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90"
+            className="shrink-0 rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-brand/30"
           >
-            New proposal
+            + New proposal
           </Link>
         </div>
 
         <div className="mt-8">
           {proposals.length === 0 ? (
-            <div className="rounded-md border border-dashed border-slate-300 bg-surface px-6 py-12 text-center">
-              <p className="text-sm text-ink-muted">No proposals yet.</p>
+            <div className="flex flex-col items-center rounded-xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center">
+              <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-2xl">
+                📄
+              </div>
+              <p className="font-medium text-ink">No proposals yet</p>
+              <p className="mt-1 text-sm text-ink-muted">
+                Generate your first Upwork proposal in seconds.
+              </p>
               <Link
                 href="/generate"
-                className="mt-3 inline-block text-sm font-medium text-brand hover:underline"
+                className="mt-5 inline-flex items-center rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90"
               >
                 Draft your first one →
               </Link>
             </div>
           ) : (
-            <ul className="divide-y divide-slate-200 overflow-hidden rounded-md border border-slate-200 bg-white">
+            <ul className="space-y-3">
               {proposals.map((p) => (
                 <li key={p.id}>
                   <Link
                     href={`/proposals/${p.id}`}
-                    className="block px-5 py-4 transition hover:bg-slate-50"
+                    className="group block rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:border-brand/40 hover:shadow-md"
                   >
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="text-sm font-medium text-ink">
-                        {truncate(p.jobDescription, 80)}
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="line-clamp-1 text-sm font-semibold text-ink group-hover:text-brand">
+                        {truncate(p.jobDescription, 90)}
                       </p>
-                      <time
-                        dateTime={p.createdAt.toISOString()}
-                        className="shrink-0 text-xs text-ink-muted"
-                      >
-                        {formatDate(p.createdAt)}
-                      </time>
+                      <div className="shrink-0 text-right">
+                        <p className="text-xs font-medium text-ink-muted">{formatDate(p.createdAt)}</p>
+                        <p className="text-xs text-ink-muted/60">{formatTime(p.createdAt)}</p>
+                      </div>
                     </div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink-muted">
-                      {truncate(p.generatedText, 160)}
+                    <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-ink-muted">
+                      {truncate(p.generatedText, 180)}
+                    </p>
+                    <p className="mt-3 text-xs font-medium text-brand opacity-0 transition group-hover:opacity-100">
+                      View proposal →
                     </p>
                   </Link>
                 </li>
@@ -116,7 +118,7 @@ export default async function ProposalsPage() {
             </ul>
           )}
         </div>
-      </section>
-    </main>
+      </main>
+    </div>
   );
 }
